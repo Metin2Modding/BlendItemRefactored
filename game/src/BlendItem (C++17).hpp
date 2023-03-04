@@ -5,7 +5,7 @@
 
 #include "item.h"
 
-class CBlendItem : public singleton<CBlendItem>
+class CBlendItem final : public singleton<CBlendItem>
 {
 	// Below structure will be a config for a container.
 	struct blend
@@ -20,11 +20,11 @@ public:
 	bool Load();
 
 	// Function that allows to find item identifier in initialized container.
-	bool Find(uint32_t item);
+	[[nodiscard]] bool Find(uint32_t item) const;
 
 	// Function that allows to create item based on initialized container.
 	void Create(LPITEM item);
 
 	// Function that allows to return size of initialized container.
-	uint64_t GetItems() noexcept;
+	[[nodiscard]] uint64_t GetItems() const;
 };

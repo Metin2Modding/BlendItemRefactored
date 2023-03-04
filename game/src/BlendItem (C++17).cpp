@@ -50,7 +50,7 @@ bool CBlendItem::Load()
 				if (const auto& result = it.value().at("type"); result.is_number())
 					schema.type = result;
 				else
-					schema.type = GetApplyType(result.get<std::string>().c_str());
+					schema.type = FN_get_apply_type(result.get<std::string>().c_str());
 
 				// If I found bonus value, I can push it to container.
 				// Otherwise, if I found bonus values, I can copy values to container.
@@ -91,9 +91,9 @@ bool CBlendItem::Load()
 }
 
 // Function that allows to find item identifier in initialized config.
-bool CBlendItem::Find(const uint32_t item)
+bool CBlendItem::Find(const uint32_t item) const
 {
-	return items.contains(item) ? true : false;
+	return items.find(item) != items.end();
 }
 
 // Function that allows to create item based on initialized config.
@@ -103,31 +103,24 @@ void CBlendItem::Create(LPITEM item)
 	if (!item || items.empty())
 		return;
 
-	for (const auto& [a, b] : items)
+	if (const auto& it = items.find(item->GetVnum()); it != items.end())
 	{
-		// Check if item identifier from iterator is equal to identifier from pointer.
-		if (a != item->GetVnum())
-			continue;
+		const auto& [type, value, duration] = it->second;
 
-		// If size of bonuses is only 1, set variable to this value.
-		// Otherwise, do simple randomization.
 		const auto applyValue =
-			b.value.size() == 1 ? b.value.at(0) : b.value.at(number(0, b.value.size() - 1));
+			value.size() == 1 ? value.at(0) : value.at(number(0, value.size() - 1));
 
-		// If size of durations is only 1, set variable to this value.
-		// Otherwise, do simple randomization.
 		const auto applyDuration =
-			b.duration.size() == 1 ? b.duration.at(0) : b.duration.at(number(0, b.duration.size() - 1));
+			duration.size() == 1 ? duration.at(0) : duration.at(number(0, duration.size() - 1));
 
-		// At the end, set sockets.
-		item->SetSocket(0, b.type);
-		item->SetSocket(1, applyValue);
-		item->SetSocket(2, applyDuration);
+		item->SetSocket(0, static_cast<int32_t>(type));
+		item->SetSocket(1, static_cast<int32_t>(applyValue));
+		item->SetSocket(2, static_cast<int32_t>(applyDuration));
 	}
 }
 
 // Function that allows to return size of initialized config.
-uint64_t CBlendItem::GetItems() noexcept
+uint64_t CBlendItem::GetItems() const
 {
 	return items.size();
 }
