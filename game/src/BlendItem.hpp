@@ -15,16 +15,17 @@
 
 #include "item.h"
 
+#include <unordered_map>
+
 class CBlendItem : public singleton<CBlendItem>
 {
 	// Below structure will be a config for a container.
 	struct blend
 	{
-		uint32_t item = 0;
 		uint32_t type = 0;
 		std::vector<uint32_t> value;
 		std::vector<uint32_t> duration;
-	}; std::vector<blend> items;
+	}; std::unordered_map<uint32_t, blend> items;
 
 public:
 	// Function that allows to initialize items.

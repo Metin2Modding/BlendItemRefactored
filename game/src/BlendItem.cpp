@@ -53,9 +53,7 @@ bool CBlendItem::Load()
 			for (const auto& it : json.items())
 			{
 				// So, it's time to create schema based on config in header file.
-				// My first item in schema is item identifier.
-				// In JSON file this is the key.
-				blend schema = { std::stoul(it.key()) };
+				blend schema = {};
 
 				// I can try now to search attribute.
 				// If it will be not a number, I can replace text with identifier.
@@ -80,7 +78,7 @@ bool CBlendItem::Load()
 
 				// I think that schema will be filled.
 				// It's time to push it to container with items.
-				items.push_back(schema);
+				items.emplace(std::stoul(it.key()), schema);
 			}
 
 			// If items container is empty, it's neccessary to make error.
@@ -105,16 +103,7 @@ bool CBlendItem::Load()
 // Function that allows to find item identifier in initialized config.
 bool CBlendItem::Find(const uint32_t item) noexcept
 {
-	// If container with items is empty, return false.
-	if (items.empty())
-		return false;
-
-	// Otherwise, check if item identifier from argument occurs in container.
-	for (const auto& it : items)
-		if (it.item == item)
-			return true;
-
-	return false;
+	return items.contains(item) ? true : false;
 }
 
 // Function that allows to create item based on initialized config.
@@ -124,24 +113,24 @@ void CBlendItem::Create(LPITEM item)
 	if (!item || items.empty())
 		return;
 
-	for (const auto& it : items)
+	for (const auto& [a, b] : items)
 	{
 		// Otherwise, check if item identifier from iterator is equal to identifier from pointer.
-		if (it.item != item->GetVnum())
+		if (a != item->GetVnum())
 			continue;
 
 		// If size of bonuses is only 1, set variable to this value.
 		// Otherwise, do simple randomization.
 		const auto applyValue =
-			it.value.size() == 1 ? it.value.at(0) : it.value.at(number(0, it.value.size() - 1));
+			b.value.size() == 1 ? b.value.at(0) : b.value.at(number(0, b.value.size() - 1));
 
 		// If size of durations is only 1, set variable to this value.
 		// Otherwise, do simple randomization.
 		const auto applyDuration =
-			it.duration.size() == 1 ? it.duration.at(0) : it.duration.at(number(0, it.duration.size() - 1));
+			b.duration.size() == 1 ? b.duration.at(0) : b.duration.at(number(0, b.duration.size() - 1));
 
 		// At the end, it's just enough to set sockets.
-		item->SetSocket(0, it.type);
+		item->SetSocket(0, b.type);
 		item->SetSocket(1, applyValue);
 		item->SetSocket(2, applyDuration);
 	}
