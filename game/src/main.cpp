@@ -1,16 +1,16 @@
 // When you deleted all results related with old system, add:
 #include "BlendItem.hpp"
 
-// Before:
+// Next, add:
+	CBlendItem blendItem;
+
+// Before this condition:
 	if (!start(argc, argv))
 		return 0;
 
-// Add:
-	CBlendItem blendItem;
-
-// And before:
+// Then find:
 	while (idle());
 
-// Add:
+// And before add:
 	if (!g_bAuthServer && !CBlendItem::instance().Load())
 		thecore_shutdown();
