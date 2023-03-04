@@ -15,8 +15,6 @@
 
 #include "item.h"
 
-#include <unordered_map>
-
 class CBlendItem : public singleton<CBlendItem>
 {
 	// Below structure will be a config for a container.

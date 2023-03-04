@@ -129,7 +129,7 @@ void CBlendItem::Create(LPITEM item)
 		const auto applyDuration =
 			b.duration.size() == 1 ? b.duration.at(0) : b.duration.at(number(0, b.duration.size() - 1));
 
-		// At the end, it's just enough to set sockets.
+		// At the end, set sockets.
 		item->SetSocket(0, b.type);
 		item->SetSocket(1, applyValue);
 		item->SetSocket(2, applyDuration);
