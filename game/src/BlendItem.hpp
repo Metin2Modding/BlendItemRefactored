@@ -32,7 +32,7 @@ public:
 	bool Load();
 
 	// Function that allows to find item identifier in initialized container.
-	bool Find(uint32_t item) noexcept;
+	bool Find(uint32_t item);
 
 	// Function that allows to create item based on initialized container.
 	void Create(LPITEM item);

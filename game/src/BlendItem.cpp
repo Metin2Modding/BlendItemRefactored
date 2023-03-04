@@ -101,7 +101,7 @@ bool CBlendItem::Load()
 }
 
 // Function that allows to find item identifier in initialized config.
-bool CBlendItem::Find(const uint32_t item) noexcept
+bool CBlendItem::Find(const uint32_t item)
 {
 	return items.contains(item) ? true : false;
 }
