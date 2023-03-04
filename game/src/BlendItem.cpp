@@ -143,12 +143,7 @@ void CBlendItem::Create(LPITEM item)
 		// At the end, it's just enough to set sockets.
 		item->SetSocket(0, it.type);
 		item->SetSocket(1, applyValue);
-
-#ifndef ENABLE_EXTENDED_BLEND_AFFECT_SYSTEM
 		item->SetSocket(2, applyDuration);
-#else
-		item->SetSocket(2, applyDuration ? applyDuration : INFINITE_AFFECT_DURATION);
-#endif
 	}
 }
 
