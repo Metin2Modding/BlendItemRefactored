@@ -21,7 +21,9 @@ bool CBlendItem::Load()
 		items.clear();
 
 	// It's time to load JSON file.
-	if (std::ifstream stream(LocaleService_GetBasePath() + "/Blend.json"); !stream)
+	std::ifstream stream(LocaleService_GetBasePath() + "/Blend.json");
+
+	if (!stream)
 	{
 		// At this point, file doesn't exist.
 		// I created simple log to inform about it.
@@ -47,21 +49,27 @@ bool CBlendItem::Load()
 
 				// I can try now to search attribute.
 				// If it will be not a number, I can replace text with identifier.
-				if (const auto& result = it.value().at("type"); result.is_number())
+				const auto& result = it.value().at("type");
+
+				if (result.is_number())
 					schema.type = result;
 				else
 					schema.type = FN_get_apply_type(result.get<std::string>().c_str());
 
 				// If I found bonus value, I can push it to container.
 				// Otherwise, if I found bonus values, I can copy values to container.
-				if (const auto& result = it.value().at("value"); result.is_array())
+				const auto& result = it.value().at("value");
+
+				if (result.is_array())
 					result.get_to(schema.value);
 				else
 					schema.value.push_back(result);
 
 				// If I found bonus duration, I can push it to container.
 				// Otherwise, if I found bonus durations, I can copy values to container.
-				if (const auto& result = it.value().at("duration"); result.is_array())
+				const auto& result = it.value().at("duration");
+
+				if (result.is_array())
 					result.get_to(schema.duration);
 				else
 					schema.duration.push_back(result);
@@ -103,7 +111,9 @@ void CBlendItem::Create(LPITEM item)
 	if (!item || items.empty())
 		return;
 
-	if (const auto& it = items.find(item->GetVnum()); it != items.end())
+	const auto& it = items.find(item->GetVnum());
+
+	if (it != items.end())
 	{
 		const auto& it2 = it->second;
 
